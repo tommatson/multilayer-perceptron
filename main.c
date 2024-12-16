@@ -18,7 +18,7 @@ typedef struct {
 
     double weightsInputHidden1[INPUT_SIZE][HIDDEN1_SIZE];
     double weightsHidden1Hidden2[HIDDEN1_SIZE][HIDDEN2_SIZE];
-    double weightsHidden2Ouput[HIDDEN2_SIZE][OUTPUT_SIZE];
+    double weightsHidden2Output[HIDDEN2_SIZE][OUTPUT_SIZE];
 
     double biasHidden1[HIDDEN1_SIZE];
     double biasHidden2[HIDDEN2_SIZE];
@@ -29,6 +29,40 @@ typedef struct {
 // Functions initilise
 
 void initialiseNetwork(NeuralNetwork *nn);
+
+void backPropogate(NeuralNetwork *nn, int correctIndex, double learningRate){
+    // error for each of the outputs
+    double outputError[OUTPUT_SIZE];
+    double hidden2Error[HIDDEN2_SIZE];
+    double hidden1Error[HIDDEN1_SIZE];
+
+
+    // find the error for the output layer by subtracting one from the intended number
+    for (int i = 0; i < OUTPUT_SIZE; i++){
+        outputError[i] = nn->output[i];
+    }
+    outputError[correctIndex] = outputError[correctIndex] - 1.0;
+
+    // computer hidden layer 2 error
+    for (int j =0; j < HIDDEN2_SIZE; j++){
+        double sum = 0.0;
+        for (int x = 0; x < OUTPUT_SIZE; x++) {
+            sum += outputError[j] * nn->weightsHidden2Output[j][x];
+        }
+        hidden2Error[j] = ReLU(nn->hidden2[j]) * sum;
+    }
+    // computer hidden layer 1 error
+    for (int k = 0; k < HIDDEN1_SIZE; k++){
+        double sum = 0.0;
+        for (int y = 0; y < HIDDEN2_SIZE; y++){
+            sum+= hidden2Error[y] * nn->weightsHidden1Hidden2[k][y];
+        }
+        hidden1Error[k] = ReLU(nn->hidden1[k]) * sum;
+    }
+    
+
+
+}
 
 double ReLU(double x);
 
@@ -71,7 +105,7 @@ void initialiseNetwork(NeuralNetwork *nn){
     // Hidden layer 2 and output layer
     for (int x= 0; x < HIDDEN2_SIZE; x++){
         for (int y = 0; y < OUTPUT_SIZE; y++){
-            nn->weightsHidden2Ouput[x][y] = ((double) rand() / RAND_MAX) * 2.0 - 1.0;
+            nn->weightsHidden2Output[x][y] = ((double) rand() / RAND_MAX) * 2.0 - 1.0;
         }
     }
 
@@ -120,7 +154,7 @@ void forwardPass(NeuralNetwork *nn){
         double firstSum = 0.0;
     
         for (int y = 0; y < HIDDEN2_SIZE; y++){
-            firstSum += nn->hidden2[y] * nn->weightsHidden2Ouput[y][x];
+            firstSum += nn->hidden2[y] * nn->weightsHidden2Output[y][x];
         }
         nn->output[x] = exp(firstSum + nn->biasOutput[x]);
         secondSum += nn->output[x];
