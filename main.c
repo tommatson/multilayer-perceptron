@@ -31,19 +31,19 @@ typedef struct {
 void initialiseNetwork(NeuralNetwork *nn);
 
 void backPropogate(NeuralNetwork *nn, int correctIndex, double learningRate){
-    // error for each of the outputs
+    // Error for each of the outputs
     double outputError[OUTPUT_SIZE];
     double hidden2Error[HIDDEN2_SIZE];
     double hidden1Error[HIDDEN1_SIZE];
 
 
-    // find the error for the output layer by subtracting one from the intended number
+    // Find the error for the output layer by subtracting one from the intended number
     for (int i = 0; i < OUTPUT_SIZE; i++){
         outputError[i] = nn->output[i];
     }
     outputError[correctIndex] = outputError[correctIndex] - 1.0;
 
-    // computer hidden layer 2 error
+    // Computer hidden layer 2 error
     for (int j =0; j < HIDDEN2_SIZE; j++){
         double sum = 0.0;
         for (int x = 0; x < OUTPUT_SIZE; x++) {
@@ -51,7 +51,7 @@ void backPropogate(NeuralNetwork *nn, int correctIndex, double learningRate){
         }
         hidden2Error[j] = ReLU(nn->hidden2[j]) * sum;
     }
-    // computer hidden layer 1 error
+    // Computer hidden layer 1 error
     for (int k = 0; k < HIDDEN1_SIZE; k++){
         double sum = 0.0;
         for (int y = 0; y < HIDDEN2_SIZE; y++){
@@ -59,6 +59,9 @@ void backPropogate(NeuralNetwork *nn, int correctIndex, double learningRate){
         }
         hidden1Error[k] = ReLU(nn->hidden1[k]) * sum;
     }
+
+    // Update the weights and biases for the output layer - need to do
+
     
 
 
