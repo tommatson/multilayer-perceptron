@@ -47,9 +47,10 @@ void backPropogate(NeuralNetwork *nn, int correctIndex, double learningRate){
     for (int j =0; j < HIDDEN2_SIZE; j++){
         double sum = 0.0;
         for (int x = 0; x < OUTPUT_SIZE; x++) {
-            sum += outputError[j] * nn->weightsHidden2Output[j][x];
+            sum += outputError[x] * nn->weightsHidden2Output[j][x];
         }
-        hidden2Error[j] = ReLU(nn->hidden2[j]) * sum;
+        // multiply by the derivative of relu
+        hidden2Error[j] = ((nn->hidden2[j]) > 0 ? 1.0 : 0.0) * sum;
     }
     // Computer hidden layer 1 error
     for (int k = 0; k < HIDDEN1_SIZE; k++){
@@ -57,11 +58,43 @@ void backPropogate(NeuralNetwork *nn, int correctIndex, double learningRate){
         for (int y = 0; y < HIDDEN2_SIZE; y++){
             sum+= hidden2Error[y] * nn->weightsHidden1Hidden2[k][y];
         }
-        hidden1Error[k] = ReLU(nn->hidden1[k]) * sum;
+        hidden1Error[k] = ((nn->hidden1[k]) > 0 ? 1.0 : 0.0) * sum;
     }
 
-    // Update the weights and biases for the output layer - need to do
+    // Update the weights and biases for the output layer
 
+    for (int i = 0; i < HIDDEN2_SIZE; i++){
+        for (int k = 0; k < OUTPUT_SIZE; k++){
+            nn->weightsHidden2Output[i][k] -= learningRate * outputError[k] * nn->hidden2[i];
+        }
+    }
+    // Biases for output
+    for (int j = 0; j < OUTPUT_SIZE; j++){
+        nn->biasOutput[j] -= learningRate * outputError[j];
+    }
+
+    // Update weigths for hidden 1 to 2
+    for (int x = 0; x < HIDDEN1_SIZE; x++) {
+        for (int y = 0; y < HIDDEN2_SIZE; y++){
+            nn->weightsHidden1Hidden2[x][y] -= learningRate * hidden2Error[y] * nn->hidden1[x];
+        }
+    }
+    // Biases for hidden 2
+    for (int a = 0 ; a < HIDDEN2_SIZE; a++){
+        nn->biasHidden2[a] -= learningRate * hidden2Error[a];
+    }
+
+    // Weights for input to hidden1
+    for (int b = 0; b < INPUT_SIZE; b++){
+        for (int f = 0; f < HIDDEN1_SIZE; f++) {
+            nn->weightsInputHidden1[b][f] -= learningRate * hidden1Error[f] * nn->input[b];
+        }
+    }
+
+    // Biases for hidden 1
+    for (int c = 0 ; c < HIDDEN1_SIZE; c++){
+        nn->biasHidden1[c] -= learningRate * hidden1Error[c];
+    }
     
 
 
