@@ -48,13 +48,12 @@ void calculateErrorTerms(Network* myNetwork){
         myNetwork->errorOutput[i] = (myNetwork->output[i] - myNetwork->actual[i]) * (myNetwork->output[i]) * (1 - myNetwork->output[i]);
     }
     // Var error is used as this is more efficient than dereferencing the pointer each j loop iteration
-    double error = 0;
     // Like error, activation is used to reduce need for dereferencing pointers
-    double activation = 0;
+
     // Now we have the error for the output layer we can use this for the next layer
     for (int i = 0; i < HIDDEN2_SIZE; i++){
-        error = 0;
-        activation = myNetwork->hidden2[i];
+        double error = 0;
+        double activation = myNetwork->hidden2[i];
 
         for (int j = 0; j < OUTPUT_SIZE; j++){
             // Use the formula of the weights * error * derivative (derivative is then f(z)(1 - f(z)) where f(z) is our activation)
@@ -65,8 +64,8 @@ void calculateErrorTerms(Network* myNetwork){
 
     // Repeat the exact same thing for the other layer
     for (int i = 0; i < HIDDEN1_SIZE; i++){
-        error = 0;
-        activation = myNetwork->hidden1[i];
+        double error = 0;
+        double activation = myNetwork->hidden1[i];
         for (int j = 0; j < HIDDEN2_SIZE; j++){
             // Use the formula of the weights * error * derivative (derivative is then f(z)(1 - f(z)) where f(z) is our activation)
             error += myNetwork->weights2[j][i] * myNetwork->errorHidden2[j] * (1 - activation) * activation;
@@ -78,12 +77,40 @@ void calculateErrorTerms(Network* myNetwork){
 
 void gradientDescent(Network* myNetwork){
 
+
+    // Update the weights and biases using gradient descent
+    for (int i = 0; i < HIDDEN1_SIZE; i++){
+        double error = myNetwork->errorHidden1[i];
+        for(int j = 0; j < INPUT_SIZE; j++){
+            myNetwork->weights1[i][j] -= LEARNING_RATE * error * myNetwork->input[j];
+
+        }
+        myNetwork->biases1[i] -= LEARNING_RATE * error;
+    }
+
+    for (int i = 0; i < HIDDEN2_SIZE; i++){
+        double error = myNetwork->errorHidden2[i];
+        for(int j = 0; j < HIDDEN1_SIZE; j++){
+            myNetwork->weights2[i][j] -= LEARNING_RATE * error * myNetwork->hidden1[j];
+
+        }
+        myNetwork->biases2[i] -= LEARNING_RATE * error;
+    }
+
+    for (int i = 0; i < OUTPUT_SIZE; i++){
+        double error = myNetwork->errorOutput[i];
+        for(int j = 0; j < HIDDEN2_SIZE; j++){
+            myNetwork->weightsOutput[i][j] -= LEARNING_RATE * error * myNetwork->hidden2[j];
+
+        }
+        myNetwork->biasesOutput[i] -= LEARNING_RATE * error;
+    }
+
 }
 
 void backPropagate(Network* myNetwork){
     calculateErrorTerms(myNetwork);
     gradientDescent(myNetwork);
-
 }
 
 
