@@ -9,6 +9,11 @@
 #define HIDDEN1_SIZE 16
 #define HIDDEN2_SIZE 16
 
+
+// For gradient descent
+#define LEARNING_RATE 0.01
+
+
 struct Network {
     double input[INPUT_SIZE];
     double output[OUTPUT_SIZE];
@@ -26,7 +31,60 @@ struct Network {
 
     double weightsOutput[OUTPUT_SIZE][HIDDEN2_SIZE];
     double biasesOutput[OUTPUT_SIZE];
+
+
+    double errorOutput[OUTPUT_SIZE];
+    double errorHidden1[HIDDEN1_SIZE];
+    double errorHidden2[HIDDEN2_SIZE];
+
+    // Will be either 0 or 1 
+    double actual[OUTPUT_SIZE];
 };
+
+
+void calculateErrorTerms(Network* myNetwork){
+    // Using the formula for the output layer error term which we derive from the cost function of 1/2 (y1 - y0)^2 where y1 is predicted and y0 is actual
+    for(int i = 0; i < OUTPUT_SIZE; i++){
+        myNetwork->errorOutput[i] = (myNetwork->output[i] - myNetwork->actual[i]) * (myNetwork->output[i]) * (1 - myNetwork->output[i]);
+    }
+    // Var error is used as this is more efficient than dereferencing the pointer each j loop iteration
+    double error = 0;
+    // Like error, activation is used to reduce need for dereferencing pointers
+    double activation = 0;
+    // Now we have the error for the output layer we can use this for the next layer
+    for (int i = 0; i < HIDDEN2_SIZE; i++){
+        error = 0;
+        activation = myNetwork->hidden2[i];
+
+        for (int j = 0; j < OUTPUT_SIZE; j++){
+            // Use the formula of the weights * error * derivative (derivative is then f(z)(1 - f(z)) where f(z) is our activation)
+            error += myNetwork->weightsOutput[j][i] * myNetwork->errorOutput[j] * (1 - activation) * activation;
+        }
+        myNetwork->errorHidden2[i] = error;
+    }
+
+    // Repeat the exact same thing for the other layer
+    for (int i = 0; i < HIDDEN1_SIZE; i++){
+        error = 0;
+        activation = myNetwork->hidden1[i];
+        for (int j = 0; j < HIDDEN2_SIZE; j++){
+            // Use the formula of the weights * error * derivative (derivative is then f(z)(1 - f(z)) where f(z) is our activation)
+            error += myNetwork->weights2[j][i] * myNetwork->errorHidden2[j] * (1 - activation) * activation;
+        }
+        myNetwork->errorHidden1[i] = error;
+    }
+
+}
+
+void gradientDescent(Network* myNetwork){
+
+}
+
+void backPropagate(Network* myNetwork){
+    calculateErrorTerms(myNetwork);
+    gradientDescent(myNetwork);
+
+}
 
 
 double applySigmoid(double value){
