@@ -2,3 +2,5 @@ main
 build
 training/*
 !training/.gitkeep
+build/*
+!build/.gitkeep
