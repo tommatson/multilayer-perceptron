@@ -7,7 +7,8 @@ A simple machine learning project that uses a **Multi-Layer Perceptron (MLP)** t
 ### 🛠 Setup & Usage
 
 
-1. ⚙️ Build the Project
+
+### 1. ⚙️ Build the Project
 To compile the C++ code:
 
 ```bash
