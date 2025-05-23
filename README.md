@@ -4,7 +4,7 @@ A simple machine learning project that uses a **Multi-Layer Perceptron (MLP)** t
 
 ---
 
-## 🛠 Setup & Usage
+### 🛠 Setup & Usage
 
 
 1. ⚙️ Build the Project
@@ -15,7 +15,7 @@ make
 ```
 This will create a main binary in the build/ folder specific to your system.
 
-2. 💻 Run the App
+### 2. 💻 Run the App
 Install the dependencies:
 
 ```bash
