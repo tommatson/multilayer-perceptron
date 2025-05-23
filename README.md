@@ -15,7 +15,7 @@ make
 ```
 This will create a main binary in the build/ folder specific to your system.
 
-3. 💻 Run the App
+2. 💻 Run the App
 Install the dependencies:
 
 ```bash
@@ -62,7 +62,7 @@ Then to train run:
 To train on another dataset, simply change what the train.py script downloads.
 
 📋 Requirements
-Python 3.8+
+Python 3.8+  
 For training, MNIST does not support anything above Python 3.9 I believe (For normal use ignore this).
 
 C++ compiler
