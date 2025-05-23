@@ -1,11 +1,7 @@
-# 🧠 Digit Recognizer with MLP
+🧠 Digit Recognizer with MLP
+A simple machine learning project that uses a Multi-Layer Perceptron (MLP) to recognize handwritten digits (0–9). It includes a Python-based drawing interface and C++ for the core machine learning logic.
 
-A simple machine learning project that uses a **Multi-Layer Perceptron (MLP)** to recognize handwritten digits (0–9). It includes a Python-based drawing interface and C++ for the core machine learning logic.
-
----
-
-## 📦 Project Structure
-
+📦 Project Structure
 .
 ├── src/ # Python and C++ source files
 │ ├── train.py # Script to download and preprocess training data
@@ -17,22 +13,14 @@ A simple machine learning project that uses a **Multi-Layer Perceptron (MLP)** t
 ├── Makefile # Build system for C++ code
 └── README.md # This file
 
-yaml
-Copy
-Edit
-
----
-
-## 🛠 Setup & Usage
-
-### 1. 🧪 Prepare Training Data (Optional)
-
-> **Note:** Retraining the model is not necessary for demo purposes.
+🛠 Setup & Usage
+1. 🧪 Prepare Training Data (Optional)
+Note: Retraining the model is not necessary for demo purposes.
 
 If you still want to retrain:
 
-```bash
 python3 src/train.py
+
 This will download and preprocess the dataset, placing it into the training/ folder.
 
 Then, open your C++ main.cpp file and:
@@ -43,32 +31,24 @@ Uncomment the trainingProcess(); line
 
 Recompile with:
 
-bash
-Copy
-Edit
 make
+
 2. ⚙️ Build the Project
 To compile the C++ code:
 
-bash
-Copy
-Edit
 make
+
 This will create a main binary in the build/ folder.
 
 3. 💻 Run the App
 Install the dependencies:
 
-bash
-Copy
-Edit
 pip install -r requirements.txt
+
 Then run the app:
 
-bash
-Copy
-Edit
 python3 src/app.py
+
 🖼 How to Use the App
 Use your mouse to draw a digit (0–9) on the 28×28 pixel grid.
 
@@ -79,10 +59,7 @@ The model will return its prediction.
 📸 Screenshots (Add Here)
 Place images in a media/ folder and reference them like this:
 
-markdown
-Copy
-Edit
-![Drawing Interface](media/drawing-interface.png)
+
 Suggested screenshots:
 
 Drawing interface in action
@@ -100,23 +77,21 @@ Virtualenv (recommended)
 
 Install Python dependencies:
 
-bash
-Copy
-Edit
 pip install -r requirements.txt
+
 🤔 Why the Training Step Isn't Streamlined
 The training process is kept separate and optional because most users do not need to retrain the model. The project is fully functional and demonstrable with the pre-trained version.
 
 💡 Possible Enhancements
-✅ Include a downloadable pre-trained model
+Include a downloadable pre-trained model
 
-📊 Show model accuracy (e.g., on MNIST test set)
+Show model accuracy (e.g., on MNIST test set)
 
-🧪 Add unit tests for Python components
+Add unit tests for Python components
 
-🌐 Upgrade to a web interface (e.g., with Flask or Streamlit)
+Upgrade to a web interface (e.g., with Flask or Streamlit)
 
-📚 Add educational content explaining the MLP internals
+Add educational content explaining the MLP internals
 
 🧑‍💻 Author
 Your Name — yourwebsite.com
@@ -125,8 +100,3 @@ GitHub: @yourusername
 📃 License
 MIT License — feel free to use and modify.
 
-css
-Copy
-Edit
-
-Let me know if you want a version with your actual name, GitHub link, or a pre-filled license section!s
