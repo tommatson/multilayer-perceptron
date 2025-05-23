@@ -147,9 +147,9 @@ double applySigmoid(double value){
 
 void forwardPass(Network* myNetwork){
     // Forward pass, usual logic of sigmoid(weights * activation + bias) for a given neuron
-    int sumWeightsActivation = 0;
+    double sumWeightsActivation = 0.0;
     for(int i = 0; i < HIDDEN1_SIZE; i++){
-        sumWeightsActivation = 0;
+        sumWeightsActivation = 0.0;
         for(int j = 0; j < INPUT_SIZE; j++){
             sumWeightsActivation += myNetwork->weights1[i][j] * myNetwork->input[j];
         }
@@ -157,7 +157,7 @@ void forwardPass(Network* myNetwork){
     }
 
     for(int i = 0; i < HIDDEN2_SIZE; i++){
-        sumWeightsActivation = 0;
+        sumWeightsActivation = 0.0;
         for(int j = 0; j < HIDDEN1_SIZE; j++){
             sumWeightsActivation += myNetwork->weights2[i][j] * myNetwork->hidden1[j];
         }
@@ -165,7 +165,7 @@ void forwardPass(Network* myNetwork){
     }
 
     for(int i = 0; i < OUTPUT_SIZE; i++){
-        sumWeightsActivation = 0;
+        sumWeightsActivation = 0.0;
         for(int j = 0; j < HIDDEN2_SIZE; j++){
             sumWeightsActivation += myNetwork->weightsOutput[i][j] * myNetwork->hidden2[j];
         }
@@ -334,9 +334,10 @@ void predictionProcess(){
     }
     forwardPass(myNetwork);
 
-    for (int i = 0; i < INPUT_SIZE; i++){
-        std::cout << myNetwork->input[i] << std::endl;
-    }
+    // for (int i = 0; i < INPUT_SIZE; i++){
+    //     std::cout << i << ":" << myNetwork->weights1[0][i] << std::endl;
+    // // }
+    // std::cout << "Activation" << myNetwork->hidden1[0] <<  "Bias" << myNetwork->biases1[0] << std::endl;
     // Find the max output
     double max = 0.0;
     int maxIndex = 0;
