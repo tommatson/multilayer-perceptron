@@ -3,12 +3,13 @@
 #include <iostream>
 #include <random>
 #include <fstream>
+#include <vector>
+#include <sstream>
 
 
-// TO DO : 1. SAVE STRUCT
-// 2. TRAIN model
-
-
+// TO DO :
+// 1. TRAIN model
+// 2. Python build the interface
 
 #define INPUT_SIZE 784
 #define OUTPUT_SIZE 10
@@ -43,7 +44,7 @@ struct Network {
     double errorHidden1[HIDDEN1_SIZE];
     double errorHidden2[HIDDEN2_SIZE];
 
-    // Will be either 0 or 1 
+    // Will be either 0 or 1 (double because of how padding works in structs)
     double actual[OUTPUT_SIZE];
 };
 
@@ -182,23 +183,29 @@ void initialiseNetwork(Network* myNetwork){
 
     // Using the Xavier method for weight initalisation as this pairs well with sigmoid
     // (basically create a normal distribution with mean 0, and variance based on input / output size, then pick a random number from it)
-    std::normal_distribution<float> dist(0.0, sqrt(2.0 / (INPUT_SIZE + OUTPUT_SIZE)));
+
+    // for weights1
+    std::normal_distribution<float> dist1(0.0, sqrt(1.0 / INPUT_SIZE));
+    // for weights2
+    std::normal_distribution<float> dist2(0.0, sqrt(1.0 / HIDDEN1_SIZE));
+    // for weightsOutput
+    std::normal_distribution<float> distOut(0.0, sqrt(1.0 / HIDDEN2_SIZE));
 
     for(int i = 0; i < HIDDEN1_SIZE; i++){
         for(int j = 0; j < INPUT_SIZE; j++){
             // Generate a random weight using our distro
-            myNetwork->weights1[i][j] = dist(gen);
+            myNetwork->weights1[i][j] = dist1(gen);
         }
     }
     // Do this for all the weights
     for(int i = 0; i < HIDDEN2_SIZE; i++){
         for(int j = 0; j < HIDDEN1_SIZE; j++){
-            myNetwork->weights2[i][j] = dist(gen);
+            myNetwork->weights2[i][j] = dist2(gen);
         }
     }
     for(int i = 0; i < OUTPUT_SIZE; i++){
         for(int j = 0; j < HIDDEN2_SIZE; j++){
-            myNetwork->weightsOutput[i][j] = dist(gen);
+            myNetwork->weightsOutput[i][j] = distOut(gen);
         }
     }
     // Zero initialise the biases
@@ -217,6 +224,72 @@ void initialiseNetwork(Network* myNetwork){
 }
 
 
+
+std::vector<std::vector<int>> loadBinaryCSV(std::string filename){
+    std::vector<std::vector<int>> data;
+    std::ifstream file(filename);
+    std::string line;
+    while (std::getline(file, line)){
+        std::stringstream ss(line);
+        std::string value;
+        std::vector<int> row;
+
+        while (std::getline(ss, value, ',')) {
+            row.push_back(std::stoi(value));
+        }
+
+        data.push_back(row);
+    }
+    // for(int i = 0; i < data.size(); i++){
+    //     for (int j = 0; j < data[i].size(); j++){
+    //         std::cout << i << "/" << j << std::endl;
+    //     }
+    // }
+    return data;
+}
+
+std::vector<int> loadLabelsCSV(std::string filename){
+    std::vector<int> data;
+    std::ifstream file(filename);
+    std::string line;
+    while (std::getline(file, line)) {
+        data.push_back(std::stoi(line));
+    }
+    return data;
+}
+
+
+
+void trainNetwork(Network* myNetwork, std::string inputFilename, std::string labelFilename){
+    std::vector<std::vector<int>> inputData = loadBinaryCSV(inputFilename);
+    std::vector<int> labelData = loadLabelsCSV(labelFilename);
+    int epochs = 10;
+    // Train the model on the input data
+    for (int k = 0; k < epochs; k++){
+        for (int i = 0; i < inputData.size(); i++){
+            // Set up all the input
+            for(int j = 0; j < INPUT_SIZE; j++){
+                myNetwork->input[j] = inputData[i][j];
+            }
+            // Set up the actual
+            for(int j = 0; j < OUTPUT_SIZE; j++){
+                myNetwork->actual[j] = labelData[i] == j ? 1.0 : 0.0;
+            }
+            // Usual network steps now that the input and actual are set
+            forwardPass(myNetwork);
+            // double loss = 0.0;
+            // for (int j = 0; j < OUTPUT_SIZE; j++) {
+            //     double diff = myNetwork->output[j] - myNetwork->actual[j];
+            //     loss += diff * diff;
+            // }
+            // std::cout << "Sample " << i << " loss: " << loss << std::endl;
+            backPropagate(myNetwork);
+        }
+    }
+    
+}
+
+
 // Used to print the value and weights of a neuron for testing purposes
 void printNeuron(Network* myNetwork){
     std::cout << "Activation: " << myNetwork->hidden1[0] << std::endl;
@@ -226,12 +299,69 @@ void printNeuron(Network* myNetwork){
 }
 
 
-int main(){
+
+
+std::vector<int> loadInputTxt(std::string filename){
+    std::ifstream infile(filename);
+    std::vector<int> values;
+    int val;
+    
+    if (!infile) {
+        std::cerr << "Error opening input.txt\n";
+    } 
+    
+    // Read all integers from the file
+    while (infile >> val) {
+        values.push_back(val);
+    }
+    return values;
+
+}
+
+
+void trainingProcess(){
     Network* myNetwork = new Network();
     initialiseNetwork(myNetwork);
-    forwardPass(myNetwork);
+    trainNetwork(myNetwork, "data/mnist_binary_input.csv", "data/mnist_labels.csv");
     saveNetwork(myNetwork, "data/network1");
+}
 
+void predictionProcess(){
+    Network* myNetwork = readNetwork("data/network1");
+    std::vector<int> inputData = loadInputTxt("data/input.txt");
+    for(int i = 0; i < INPUT_SIZE; i++){
+        myNetwork->input[i] = inputData[i];
+    }
+    forwardPass(myNetwork);
+
+    for (int i = 0; i < INPUT_SIZE; i++){
+        std::cout << myNetwork->input[i] << std::endl;
+    }
+    // Find the max output
+    double max = 0.0;
+    int maxIndex = 0;
+    for (int i = 0; i < OUTPUT_SIZE; i++){
+        // std::cout << myNetwork->output[i] << std::endl; 
+        if (myNetwork->output[i] > max){
+            max = myNetwork->output[i];
+            maxIndex = i;
+        }
+    }
+    // Write the max
+    std::ofstream outfile("data/output.txt");
+    if (!outfile) {
+        std::cerr << "Error opening output.txt for writing\n";
+    }
+
+    outfile << maxIndex; // Write the int to file
+    outfile.close();
+
+}
+
+int main(){
+
+    // trainingProcess();
+    predictionProcess();
     return 0;
 }
 
