@@ -2,6 +2,12 @@
 
 #include <iostream>
 #include <random>
+#include <fstream>
+
+
+// TO DO : 1. SAVE STRUCT
+// 2. TRAIN model
+
 
 
 #define INPUT_SIZE 784
@@ -41,6 +47,25 @@ struct Network {
     double actual[OUTPUT_SIZE];
 };
 
+void saveNetwork(Network* myNetwork, std::string filename){
+    // Create the output file
+    std::ofstream outFile(filename, std::ios::binary);
+    if (outFile){
+        // Write the struct to the output file, casting the network pointer to a char since this is what the write expects
+        outFile.write(reinterpret_cast<const char*>(myNetwork), sizeof(Network));
+    }
+    outFile.close();
+
+}
+Network* readNetwork(std::string filename){
+    Network* myNetwork = new Network();
+    std::ifstream inFile(filename, std::ios::binary);
+    if (inFile) {
+        inFile.read(reinterpret_cast<char*>(myNetwork), sizeof(Network));
+    }
+    inFile.close();
+    return myNetwork;
+}
 
 void calculateErrorTerms(Network* myNetwork){
     // Using the formula for the output layer error term which we derive from the cost function of 1/2 (y1 - y0)^2 where y1 is predicted and y0 is actual
@@ -192,9 +217,21 @@ void initialiseNetwork(Network* myNetwork){
 }
 
 
+// Used to print the value and weights of a neuron for testing purposes
+void printNeuron(Network* myNetwork){
+    std::cout << "Activation: " << myNetwork->hidden1[0] << std::endl;
+    for (int i = 0; i < HIDDEN2_SIZE; i++){
+        std::cout << "Weight: " << myNetwork->weights2[i][1] << std::endl; 
+    }
+}
+
+
 int main(){
     Network* myNetwork = new Network();
     initialiseNetwork(myNetwork);
+    forwardPass(myNetwork);
+    saveNetwork(myNetwork, "data/network1");
+
     return 0;
 }
 

@@ -1,0 +1,1 @@
+The reason why this has requirements is because although the model in done entirely in cpp I am using python to create an interface for it, as this still aligns with the claim of the NN from scratch, but provides an interface for the user to mess around with it.
