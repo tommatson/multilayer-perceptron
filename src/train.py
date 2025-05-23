@@ -11,5 +11,5 @@ x_train = (x_train / 255.0 > 0.5).astype(int)
 x_train_flat = x_train.reshape((-1, 784))
 
 # Save the first 1000 samples for demo
-np.savetxt("data/mnist_binary_input.csv", x_train_flat, fmt='%d', delimiter=',')
-np.savetxt("data/mnist_labels.csv", y_train, fmt='%d', delimiter=',')
+np.savetxt("training/mnist_binary_input.csv", x_train_flat, fmt='%d', delimiter=',')
+np.savetxt("training/mnist_labels.csv", y_train, fmt='%d', delimiter=',')

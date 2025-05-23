@@ -322,7 +322,7 @@ std::vector<int> loadInputTxt(std::string filename){
 void trainingProcess(){
     Network* myNetwork = new Network();
     initialiseNetwork(myNetwork);
-    trainNetwork(myNetwork, "data/mnist_binary_input.csv", "data/mnist_labels.csv");
+    trainNetwork(myNetwork, "training/mnist_binary_input.csv", "training/mnist_labels.csv");
     saveNetwork(myNetwork, "data/network1");
 }
 
