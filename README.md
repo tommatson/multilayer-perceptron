@@ -1,5 +1,6 @@
 # 🧠 Digit Recognizer with MLP
 
+⚠️ DISCLAIMER: This project is for research and educational purposes only. Do NOT use this trading bot with real capital. It is not intended for production or live trading. The models are experimental and may not reflect real-world market behavior.  
 A simple machine learning project that uses a **Multi-Layer Perceptron (MLP)** to recognize handwritten digits (0–9). It includes a Python-based drawing interface and C++ for the core machine learning logic.
 
 ---
