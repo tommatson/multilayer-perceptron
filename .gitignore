@@ -3,3 +3,5 @@ training/*
 !training/.gitkeep
 build/*
 !build/.gitkeep
+.vscode
+.DS_Store
