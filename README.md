@@ -1,14 +1,14 @@
-# 🧠 Digit Recognizer with MLP
+# Digit Recognizer with MLP
 
 A simple machine learning project that uses a **Multi-Layer Perceptron (MLP)** to recognize handwritten digits (0–9). It includes a Python-based drawing interface and C++ for the core machine learning logic.
 
 ---
 
-### 🛠 Setup & Usage
+### Setup & Usage
 
 
 
-### 1. ⚙️ Build the Project
+### 1. Build the Project
 To compile the C++ code:
 
 ```bash
@@ -16,7 +16,7 @@ make
 ```
 This will create a main binary in the build/ folder specific to your system.
 
-### 2. 💻 Run the App
+### 2. Run the App
 Install the dependencies:
 
 ```bash
@@ -27,14 +27,14 @@ Then run the app:
 ```bash
 python3 src/app.py
 ```
-🖼 How to Use the App
+How to Use the App
 Use your mouse to draw a digit (0–9) on the 28×28 pixel grid.
 
 Click the "Predict" button.
 
 The model will return its prediction at the top of the opened window.
 
-### 3. 🧪 Retraining the model (Optional)
+### 3. Retraining the model (Optional)
 
 > **Note:** Retraining the model is not necessary for demo purposes, functionality is there however.
 
@@ -75,11 +75,11 @@ Install Python dependencies:
 ```bash
 pip install -r requirements.txt
 ```
-🤔 Why the Training Step Isn't Streamlined
+Why the Training Step Isn't Streamlined
 The training process is kept separate and optional because most users do not need to retrain the model. The project is fully functional and demonstrable with the pre-trained version.
 
-🧑‍💻 Author
+Author
 GitHub: @tommatson
 
-📃 License
+License
 MIT License — feel free to use and modify.
