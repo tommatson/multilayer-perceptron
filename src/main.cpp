@@ -1,15 +1,9 @@
-// Doing the thing again in C++
-
 #include <iostream>
 #include <random>
 #include <fstream>
 #include <vector>
 #include <sstream>
 
-
-// TO DO :
-// 1. TRAIN model
-// 2. Python build the interface
 
 #define INPUT_SIZE 784
 #define OUTPUT_SIZE 10
@@ -240,11 +234,6 @@ std::vector<std::vector<int>> loadBinaryCSV(std::string filename){
 
         data.push_back(row);
     }
-    // for(int i = 0; i < data.size(); i++){
-    //     for (int j = 0; j < data[i].size(); j++){
-    //         std::cout << i << "/" << j << std::endl;
-    //     }
-    // }
     return data;
 }
 
@@ -277,12 +266,6 @@ void trainNetwork(Network* myNetwork, std::string inputFilename, std::string lab
             }
             // Usual network steps now that the input and actual are set
             forwardPass(myNetwork);
-            // double loss = 0.0;
-            // for (int j = 0; j < OUTPUT_SIZE; j++) {
-            //     double diff = myNetwork->output[j] - myNetwork->actual[j];
-            //     loss += diff * diff;
-            // }
-            // std::cout << "Sample " << i << " loss: " << loss << std::endl;
             backPropagate(myNetwork);
         }
     }
@@ -334,15 +317,10 @@ void predictionProcess(){
     }
     forwardPass(myNetwork);
 
-    // for (int i = 0; i < INPUT_SIZE; i++){
-    //     std::cout << i << ":" << myNetwork->weights1[0][i] << std::endl;
-    // // }
-    // std::cout << "Activation" << myNetwork->hidden1[0] <<  "Bias" << myNetwork->biases1[0] << std::endl;
     // Find the max output
     double max = 0.0;
     int maxIndex = 0;
     for (int i = 0; i < OUTPUT_SIZE; i++){
-        // std::cout << myNetwork->output[i] << std::endl; 
         if (myNetwork->output[i] > max){
             max = myNetwork->output[i];
             maxIndex = i;
