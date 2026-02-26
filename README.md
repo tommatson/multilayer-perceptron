@@ -62,7 +62,7 @@ Then to train run:
 ```
 To train on another dataset, simply change what the train.py script downloads.
 
-📋 Requirements
+Requirements
 Python 3.8+  
 For training, MNIST does not support anything above Python 3.9 I believe (For normal use ignore this).
 
